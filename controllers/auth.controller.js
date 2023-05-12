@@ -23,13 +23,33 @@ exports.register = async (req, res) => {
 
     // Save user to database
     const savedUser = await newUser.save();
-    res
-      .status(201)
-      .json({
-        username: savedUser.username,
-        email: savedUser.email,
-        id: savedUser._id,
-      });
+    res.status(201).json({
+      username: savedUser.username,
+      email: savedUser.email,
+      id: savedUser._id,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    // Check if user exists in database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Check if password is correct
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Login successful
+    res.status(200).json({ message: "Login successful", user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

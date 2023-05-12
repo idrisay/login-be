@@ -22,23 +22,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Hash password before saving to database
-userSchema.pre("save", async function (next) {
-  try {
-    // Check if password is already hashed
-    if (!this.isModified("password")) {
-      return next();
-    }
-
-    // Hash password using bcrypt
-    const hashedPassword = await bcrypt.hash(this.password, 10);
-    this.password = hashedPassword;
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
