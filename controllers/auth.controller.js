@@ -66,13 +66,14 @@ exports.forgetPassword = async (req, res) => {
       function (err, info) {
         if (err) {
           console.log(err);
+          res.status(500).json({ message: "Something went wrong!", error: err });
         } else {
           console.log(info);
         }
       }
     );
 
-    res.status(400).json({ message: "Forget password" });
+    res.status(400).json({ message: "Forget password email sent successfully" });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong!", error: error });
   }
