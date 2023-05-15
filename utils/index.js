@@ -1,5 +1,5 @@
 const cors = require("cors");
-const configs = require("./configs");
+const configs = require("../configs");
 
 const allowedOrigins = [configs.allowedCors];
 

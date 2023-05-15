@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../db/models/User");
+const transporter = require("../utils/emails/index");
+const forgetPasswordHTMLMail = require("../utils/emails/forget-password");
 
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -53,4 +55,21 @@ exports.login = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+exports.forgetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  transporter.sendMail(
+    forgetPasswordHTMLMail("Forget Password", "idris@ay.com", email),
+    function (err, info) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
+      }
+    }
+  );
+
+  res.status(500).json({ message: "Forget password" });
 };
