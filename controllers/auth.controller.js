@@ -58,18 +58,22 @@ exports.login = async (req, res) => {
 };
 
 exports.forgetPassword = async (req, res) => {
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  transporter.sendMail(
-    forgetPasswordHTMLMail("Forget Password", "idris@ay.com", email),
-    function (err, info) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(info);
+    transporter.sendMail(
+      forgetPasswordHTMLMail("Forget Password", "idris@ay.com", email),
+      function (err, info) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(info);
+        }
       }
-    }
-  );
+    );
 
-  res.status(500).json({ message: "Forget password" });
+    res.status(400).json({ message: "Forget password" });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong!", error: error });
+  }
 };
